@@ -1,16 +1,21 @@
 
 # Full Stack JavaScript Techdegree v2 - REST API Project
 
-## Overview of the Provided Project Files
+A REST API using Express. The API provides a way for users to administer a school database containing information about courses: users can interact with the database by retrieving a list of courses, as well as adding, updating and deleting courses in the database.
 
-We've supplied the following files for you to use: 
+In addition, the project will require users to create an account and log-in to make changes to the database.
 
-* The `seed` folder contains a starting set of data for your database in the form of a JSON file (`data.json`) and a collection of files (`context.js`, `database.js`, and `index.js`) that can be used to create your app's database and populate it with data (we'll explain how to do that below).
-* We've included a `.gitignore` file to ensure that the `node_modules` folder doesn't get pushed to your GitHub repo.
-* The `app.js` file configures Express to serve a simple REST API. We've also configured the `morgan` npm package to log HTTP requests/responses to the console. You'll update this file with the routes for the API. You'll update this file with the routes for the API.
-* The `nodemon.js` file configures the nodemon Node.js module, which we are using to run your REST API.
-* The `package.json` file (and the associated `package-lock.json` file) contain the project's npm configuration, which includes the project's dependencies.
-* The `RESTAPI.postman_collection.json` file is a collection of Postman requests that you can use to test and explore your REST API.
+
+You can use the project using postman
+
+## The following routes are available
+- GET /api/courses 200 - Returns a list of courses (including the user that owns each course)
+- GET /api/courses/:id 200 - Returns the course (including the user that owns the course) for the provided course ID
+- POST /api/courses 201 - Creates a course, sets the Location header to the URI for the course, and returns no content
+- PUT /api/courses/:id 204 - Updates a course and returns no content
+- DELETE /api/courses/:id 204 - Deletes a course and returns no content
+- GET /api/users 200 - Returns the currently authenticated user
+- POST /api/users 201 - Creates a user, sets the Location header to "/", and returns no content
 
 ## Getting Started
 
