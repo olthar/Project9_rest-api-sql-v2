@@ -14,10 +14,10 @@ module.exports = (sequelize) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: 'Please provide a first name with your POST request',
+            msg: 'Please provide a "firstName" with your POST request',
           },
           notEmpty: {
-            msg: 'Please provide a first name with your POST request',
+            msg: 'Please provide a "firstName" with your POST request',
           },
         },
     },
@@ -26,10 +26,10 @@ module.exports = (sequelize) => {
             allowNull: false,
             validate: {
               notNull: {
-                msg: 'Please provide a last name with your POST request',
+                msg: 'Please provide a "lastName" with your POST request',
               },
               notEmpty: {
-                msg: 'Please provide a last name with your POST request',
+                msg: 'Please provide a "lastName" with your POST request',
               },
             },
     },
@@ -38,10 +38,10 @@ module.exports = (sequelize) => {
             allowNull: false,
             validate: {
               notNull: {
-                msg: 'Please provide a valid email address with your POST request',
+                msg: 'Please provide a valid "emailAddress" with your POST request',
               },
               notEmpty: {
-                msg: 'Please provide a valid email address with your POST request',
+                msg: 'Please provide a valid "emailAddress" with your POST request',
               },
               //Check the email format is valid. 
               isEmail: {
@@ -56,7 +56,7 @@ module.exports = (sequelize) => {
 
   User.associate = (models) => {
     User.hasMany(models.Course, {
-      as: 'user',
+      as: 'owner',
       foreignKey: {
         fieldName: 'userId',
         field: 'userId',

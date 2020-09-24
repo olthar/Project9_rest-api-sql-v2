@@ -19,23 +19,33 @@ function asyncHandler(cb){
 }
   
   // Route that returns the current authenticated user using the auth.js authenticateUser function. 
-  router.get('/', auth.authenticateUser, asyncHandler (async (req, res) => {
-    const user = req.currentUser;
-    // Route that returns the current authenticated user.
-        res.json({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            emailAddress: user.emailAddress
-    });
-  }));
+router.get('/', auth.authenticateUser, asyncHandler (async (req, res) => {
+  const user = req.currentUser;
+  // Route that returns the current authenticated user.
+      res.json({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          emailAddress: user.emailAddress
+  });
+}));
 
 // POST /api/users 201 - Creates a user
-// Checks there is a password and the rest is validated through the model validation. 
+// Checks there is a all data needed for user creation. 
 router.post('/',[
+  check('firstName')
+  .exists({ checkNull: true, checkFalsy: true })
+  .withMessage('Please provide a "firstName" with your POST request'),
+  check('lastName')
+  .exists({ checkNull: true, checkFalsy: true })
+  .withMessage('Please provide a "lastName" with your POST request'),
+  check('emailAddress')
+  .exists({ checkNull: true, checkFalsy: true })
+  .withMessage('Please provide a valid "emailAddress" with your POST request'),
   check('password')
     .exists({ checkNull: true, checkFalsy: true })
-    .withMessage('Please provide a password with your POST request'),
-], asyncHandler(async (req, res) => {
+    .withMessage('Please provide a "password" with your POST request'),
+],
+ asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     //validation error handling
     if (!errors.isEmpty()) {
@@ -49,20 +59,10 @@ router.post('/',[
     
     //Check to see if email is already in use. 
     if (alreadyExists) {
-        res.status(401).json({ message: 'This email address already registered' });
-    } else {    
-        try {
-            user = await User.create(req.body);
-            return res.status(201).location('/').end();
-
-        } catch (error) {
-            if(error.name === "SequelizeValidationError") { // checking the error
-                const errors = error.errors.map(err => err.message);
-                res.status(400).json(errors); 
-            } else {
-                throw error; 
-            }  
-        }
+        res.status(400).json({ message: 'This email address already registered' });
+    } else {      
+        user = await User.create(req.body);
+        return res.status(201).location('/').end();
     }
 }));
 

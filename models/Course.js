@@ -26,10 +26,10 @@ module.exports = (sequelize) => {
             allowNull: false,
             validate: {
               notNull: {
-                msg: 'Please provide a name for "description"',
+                msg: 'Please provide a "description"',
               },
               notEmpty: {
-                msg: 'Please provide a name for "description"',
+                msg: 'Please provide a "description"',
               },
             },
     },
@@ -39,13 +39,20 @@ module.exports = (sequelize) => {
 
   Course.associate = (models) => {
     Course.belongsTo(models.User, {
-      as: 'user',
+      as: 'owner',
       foreignKey: {
         fieldName: 'userId',
         field: 'userId',
         allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Please provide a userId for the "course"',
+          },
+          notEmpty: {
+            msg: 'Please provide a userId for the "course"',
+          },
       },
-    });
+    }});
   };
 
 

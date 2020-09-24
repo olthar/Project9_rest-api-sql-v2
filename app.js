@@ -3,6 +3,10 @@
 // load modules
 const express = require('express');
 const morgan = require('morgan');
+const { sequelize } = require('./models');
+
+// const sequelize = require('./models').sequelize;
+
 
 const indexRouter = require('./routes/index');
 const coursesRouter = require('./routes/courses');
@@ -43,17 +47,40 @@ app.use((err, req, res, next) => {
   if (enableGlobalErrorLogging) {
     console.error(`Global error handler: ${JSON.stringify(err.stack)}`);
   }
-
-  res.status(err.status || 500).json({
-    message: err.message,
-    error: {},
-  });
+  if (err.name === 'SequelizeValidationError') {
+    const errors = err.errors.map(error => error.message);
+    res.status(400).json(errors);   
+  } else {
+      res.status(err.status || 500).json({
+        message: err.message,
+        name: err.name,
+        error: {},
+      });
+  }
 });
 
 // set our port
 app.set('port', process.env.PORT || 5000);
 
+// Test connection to the database and sync the models
 // start listening on our port
-const server = app.listen(app.get('port'), () => {
-  console.log(`Express server is listening on port ${server.address().port}`);
-});
+
+console.log('Testing the connection to the database...');
+(async () => {
+  try {
+    // Test the connection to the database
+    console.log('Connection to the database successful!');
+    await sequelize.authenticate();
+
+    // Sync the models
+    console.log('Synchronizing the models with the database...');
+    await sequelize.sync;
+
+    const server = await app.listen(app.get('port'), () => {
+      console.log(`Express server is listening on port ${server.address().port}`);
+    })
+
+  } catch(error) {
+    console.error('Error on start-up:', error);
+  }
+})();
